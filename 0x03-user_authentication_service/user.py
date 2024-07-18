@@ -21,3 +21,17 @@ class User(Base):
     hashed_password = Column(String(250), nullable=False)
     session_id = Column(String(250), nullable=True)
     reset_token = Column(String(250), nullable=True)
+
+    def __repr__(self) -> str:
+        return f"<User(id={self.id}, email='{self.email}')>"
+
+
+def create_all() -> None:
+    """
+    Create all tables in the database.
+    """
+    Base.metadata.create_all(engine)
+
+
+if __name__ == '__main__':
+    create_all()

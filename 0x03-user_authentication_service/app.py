@@ -6,8 +6,10 @@ Basic Flask app
 from flask import Flask, jsonify, request, abort, redirect
 from auth import Auth
 
-app = Flask(__name__)
 AUTH = Auth()
+
+
+app = Flask(__name__)
 
 
 @app.route("/", methods=["GET"])
@@ -35,7 +37,7 @@ def users() -> str:
 
 
 @app.route("/sessions", methods=["POST"])
-def login():
+def login() -> str:
     """
     Login a user.
     """

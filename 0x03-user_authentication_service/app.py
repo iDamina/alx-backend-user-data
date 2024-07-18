@@ -3,7 +3,7 @@
 Basic Flask app
 """
 
-from flask import Flask, jsonify, request, abort, redirect
+from flask import Flask, jsonify, request, abort, make_response
 from auth import Auth
 
 AUTH = Auth()
@@ -53,7 +53,9 @@ def login() -> str:
             abort(401)
 
         session_id = AUTH.create_session(user.id)
-        response = make_response(jsonify({"email": user.email, "message": "logged in"}))
+        response = make_response(
+            jsonify({"email": user.email, "message": "logged in"})
+        )
         response.set_cookie("session_id", session_id)
         return response
     except Exception:

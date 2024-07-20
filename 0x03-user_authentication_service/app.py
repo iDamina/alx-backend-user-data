@@ -3,7 +3,7 @@
 Basic Flask app
 """
 
-from flask import Flask, jsonify, request, abort, make_response
+from flask import Flask, jsonify, request, abort
 from auth import Auth
 
 AUTH = Auth()
@@ -37,7 +37,7 @@ def users() -> str:
 
 
 @app.route("/sessions", methods=["POST"])
-def login() -> str:
+def login():
     """
     Login a user.
     """
@@ -53,13 +53,30 @@ def login() -> str:
             abort(401)
 
         session_id = AUTH.create_session(user.id)
-        response = make_response(
-            jsonify({"email": user.email, "message": "logged in"})
-        )
+
+        response = jsonify({"email": user.email, "message": "logged in"})
         response.set_cookie("session_id", session_id)
         return response
-    except Exception:
+    except Exception as e:
+        print(f"Exception occured: {e}")
         abort(401)
+
+@app.route("/sessions", methods=["DELETE"])
+def logout():
+        """
+        Logout a user.
+        """
+        session_id = request.cookies.get('session_id')
+
+        if not session_id:
+            abort(403)
+
+        user = AUTH.get_user_from_session_id(session_id)
+        if not user:
+            abort(403)
+
+        AUTH.destroy_session(user.id)
+        return redirect('/'))
 
 
 if __name__ == "__main__":
